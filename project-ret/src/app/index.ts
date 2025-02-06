@@ -1,0 +1,5 @@
+
+export type deafultURL = string;
+
+
+
