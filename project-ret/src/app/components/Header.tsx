@@ -8,7 +8,8 @@ import volumeOn from "../../../public/volumeON.svg";
 import musicLib from "../../../public/musicLib.svg";
 import Search from "./Search";
 import Volume from "./UI/UX/volume";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Link from "next/link";
 
 interface HeaderProps {
     title: string;
@@ -18,15 +19,18 @@ interface HeaderProps {
 export default function Header({ title, imgClass }: HeaderProps) {
     const [isVolumeMuted, setIsVolumeMuted] = useState<boolean>(false);
     const onVolumeHandlerClick = (): void => setIsVolumeMuted(!isVolumeMuted);
-    
+
     return (
-        <div className="flex w-full h-16 px-10 pb-3 items-end justify-between sticky top-0 z-50 bg-opacity-0">
+        <div className="flex w-screen h-16 px-10 pb-3 items-end justify-between sticky top-0 z-50  bg-background shadow-[0_0_8px_5px_#0a0a0a]">
             <div className="flex items-end">
-                <Image
-                    className={`${imgClass} cursor-pointer`}
-                    src={logo}
-                    alt="Logo"
-                />
+                <Link href={"/player"}>
+                    <Image
+                        className={`${imgClass} cursor-pointer`}
+                        src={logo}
+                        alt="Logo"
+                    />
+                </Link>
+
                 <h1 className="px-8 text-2xl">{title}</h1>
             </div>
 
@@ -36,7 +40,7 @@ export default function Header({ title, imgClass }: HeaderProps) {
                     className="container relative flex w-20 h-20 items-end justify-center group"
                 >
                     <Image
-                        className='w-10 h-10 rounded-full bg-backgroundHeaderSearch p-2.5 mr-2 cursor-pointer hover:shadow-[0_0_8px_5px_#F24F1C] transition-deafultTransition'
+                        className='w-10 h-10 rounded-full bg-backgroundHeaderSearch p-2.5 mr-2 cursor-pointer group-hover:shadow-[0_0_8px_5px_#F24F1C] transition-deafultTransition'
                         src={isVolumeMuted ? volumeOff : volumeOn}
                         alt="volume"
                         onClick={onVolumeHandlerClick}

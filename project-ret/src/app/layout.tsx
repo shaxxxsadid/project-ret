@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight } from "next/font/google";
 import "./globals.css";
+import { ReduxProvider } from "./components/Providers/Provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -14,7 +15,7 @@ const interTight = Inter_Tight({
 
 export const metadata: Metadata = {
   title: "Music App",
-  description: "Next app",
+  description: "Next musicaly app",
 };
 
 export default function RootLayout({
@@ -25,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} ${interTight.className}`}>
-        {children}
+        <ReduxProvider>
+          {children}
+        </ReduxProvider>
       </body>
     </html>
   );

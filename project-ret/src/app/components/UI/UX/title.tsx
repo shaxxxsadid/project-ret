@@ -8,8 +8,8 @@ interface TitleProps {
 
 export default function Title({ title }: TitleProps) {
     return (
-        <section className="flex justify-center items-center w-full h-96 my-10 ml-5">
-            <article className="w-1/2 h-96 bg-cover bg-center flex flex-col items-start justify-end relative rounded-2xl" style={{ backgroundImage: `url(${BackgroundImage.src})` }}>      
+        <section className="flex justify-center items-center w-full h-96 my-10">
+            <article className="w-1/2 ml-10 h-96 bg-cover bg-center flex flex-col items-start justify-end relative rounded-2xl" style={{ backgroundImage: `url(${BackgroundImage.src})` }}>      
                 <h1 className=" ml-10 text-6xl text-white font-extrabold">{title}</h1>
                 <CustomButton
                     className="m-10"
