@@ -11,7 +11,7 @@ interface CustomButtonProps {
     height?: string
     className?: string
     imgButton?: {
-        imgSrc?: StaticImageData
+        imgSrc?: StaticImageData 
         width?: string
         height?: string
     }

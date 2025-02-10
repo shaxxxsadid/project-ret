@@ -17,7 +17,7 @@ export default {
       transitionProperty: {
         'deafultTransition': 'transition-all duration-300 ease-in-out cubic-bezier(.42,.97,.52,1.49)',
         'spacing': 'margin, padding',
-       },
+      },
     },
   },
   plugins: [],
