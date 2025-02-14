@@ -1,6 +1,6 @@
 'use client';
 
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import placeholder from "../../../public/placeholderslider.png";
 import CustomButton from "./UI/UX/customButton";
 import useSound from 'use-sound'
@@ -17,7 +17,7 @@ interface MusicPlayerProps {
 
 export default function MusicPlayer({ img, soundUrl }: MusicPlayerProps) {
     const [currentTime, setCurrentTime] = useState<number>(0);
-    const [currentPlayerImg, setCurrentPlayerImg] = useState<any>(playImg);
+    const [currentPlayerImg, setCurrentPlayerImg] = useState<StaticImageData>(playImg);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const volume = useAppSelector((state) => state.volume.volume);
     const [play, { stop, sound, duration, pause }] = useSound(
@@ -37,13 +37,8 @@ export default function MusicPlayer({ img, soundUrl }: MusicPlayerProps) {
         sound.seek(newTime);
         setCurrentTime(newTime);
     };
-    const handlePlay = () => {
-        isPlaying ? pause() : play();
-    };
     useEffect(() => {
-        if (sound) {
-            sound.volume(volume / 100);
-        }
+        sound?.volume(volume / 100);
         const interval = setInterval(() => {
             if (isPlaying) {
                 setCurrentTime(sound.seek());
@@ -53,10 +48,9 @@ export default function MusicPlayer({ img, soundUrl }: MusicPlayerProps) {
         return () => clearInterval(interval);
     }, [volume, sound, isPlaying]);
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center">
-
+        <div className="w-full h-[90vh] flex flex-col items-center justify-center">
             <Image
-                className="w-auto h-3/6 my-16 shadow-[0_0_-5px_5px_#F24F1C] transition-deafultTransition radius-2xl"
+                className="w-auto h-3/6 portrait:h-auto my-16 shadow-[0_0_-5px_5px_#F24F1C] transition-deafultTransition radius-2xl"
                 src={img ? img : placeholder}
                 alt="Music"
             />
@@ -79,7 +73,7 @@ export default function MusicPlayer({ img, soundUrl }: MusicPlayerProps) {
                 imgButton={{ imgSrc: currentPlayerImg, width: "w-8", height: "h-8" }}
                 size="text-lg"
                 color="#F24F1C"
-                onClick={(handlePlay)}
+                onClick={()=> isPlaying ? pause() : play()}
                 width="w-20"
                 height="h-20"
                 rounded="rounded-full"

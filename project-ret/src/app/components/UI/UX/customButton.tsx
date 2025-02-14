@@ -1,6 +1,6 @@
 "use client";
 
-import { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 interface CustomButtonProps {
     title?: string
@@ -11,7 +11,7 @@ interface CustomButtonProps {
     height?: string
     className?: string
     imgButton?: {
-        imgSrc?: StaticImageData 
+        imgSrc: StaticImageData
         width?: string
         height?: string
     }
@@ -29,9 +29,10 @@ export default function CustomButton({ title, color, size, onClick, width, heigh
                 ?
                 title
                 :
-                <img
+                <Image
                     className={`${imgButton?.width} ${imgButton?.height}`}
-                    src={imgButton?.imgSrc?.src}
+                    src={imgButton?.imgSrc?.src || ""}
+                    alt="Play"
                 />
             }
         </button>

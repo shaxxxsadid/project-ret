@@ -31,7 +31,7 @@ export default function Volume({ classNameVolume, isMuted }: VolumeProps) {
                 setVolumeBar(previousVolume);
                 dispatch(setVolume(previousVolume));
             }
-    }, [isMuted]);
+    }, [isMuted , volumeBar, previousVolume, dispatch]);
     return (
         <input
             type="range"

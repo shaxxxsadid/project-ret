@@ -1,10 +1,7 @@
 'use client';
 import React from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
-import placeholder from '../../../public/placeholder.svg';
 import { HandySvg } from "handy-svg";
-import Header from '../components/Header';
 
 //  заменить на API-запрос
 const user = {
@@ -18,8 +15,7 @@ const user = {
 
 export default function ProfilePage() {
   return (
-    <div className="w-screen min-h-screen overflow-x-hidden flex flex-col items-center justify-stretch">
-      <Header title="Profile" imgClass="w-8 h-8" />
+    <div className="w-full h-[90vh] flex flex-col items-center justify-center">
       <div className=' flex flex-col items-center justify-center w-fit h-fit bg-neutral-800 p-10 rounded-2xl'>
         <Head>
           <title>Profile - {user.name}</title>
