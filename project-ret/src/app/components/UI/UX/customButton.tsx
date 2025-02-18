@@ -31,6 +31,8 @@ export default function CustomButton({ title, color, size, onClick, width, heigh
                 :
                 <Image
                     className={`${imgButton?.width} ${imgButton?.height}`}
+                    width={20}
+                    height={20}
                     src={imgButton?.imgSrc?.src || ""}
                     alt="Play"
                 />

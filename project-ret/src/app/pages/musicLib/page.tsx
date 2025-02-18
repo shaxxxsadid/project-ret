@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import placeholder from '../../../public/placeholderslider.png';
+import placeholder from '@/../public/placeholderslider.png';
 import Loader from '../../components/UI/UX/Loader';
 
 // Пример данных плейлистов (заменить на API-запрос)

@@ -4,8 +4,7 @@ import { config } from 'dotenv';
 config();
 
 const uri = process.env.DB_URL as string;
-
-const client = new MongoClient(uri, {
+const options = {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -13,28 +12,37 @@ const client = new MongoClient(uri, {
   },
   connectTimeoutMS: 30000,
   socketTimeoutMS: 30000,
+};
 
-});
-
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
 let isConnectedFlag = false;
 
 export async function connectToCluster() {
+  if (isConnectedFlag) {
+    console.log('Client already connected');
+    return client;
+  }
+
+  if (!clientPromise) {
+    client = new MongoClient(uri, options);
+    clientPromise = client.connect();
+  }
+
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    await clientPromise;
     console.log('Successfully connected to MongoDB Atlas!');
     isConnectedFlag = true;
     return client;
-  }
-  // Ensures that the client will close when you finish/error
-  catch (e) {
-    console.error(e);
+  } catch (e) {
+    console.error('Failed to connect to MongoDB Atlas:', e);
+    isConnectedFlag = false;
+    return client;
   }
 }
 
 export async function disconnectFromCluster() {
   try {
-    // Ensures that the client will close when you finish/error
     await client.close();
     console.log('Successfully disconnected from MongoDB Atlas!');
     isConnectedFlag = false;

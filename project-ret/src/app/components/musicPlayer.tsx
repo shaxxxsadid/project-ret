@@ -4,7 +4,7 @@ import Image, { StaticImageData } from "next/image";
 import placeholder from "../../../public/placeholderslider.png";
 import CustomButton from "./UI/UX/customButton";
 import useSound from 'use-sound'
-import playImg from "../../../public/play.svg";
+import playImg from "@/../public/play.svg";
 import pauseImg from "@/../public/pause.svg";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../lib/store";
