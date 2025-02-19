@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import ApiError from '../../errors/errorApi'
+import ApiError from '@/app/api/errors/errorApi'
 import { GetCollection } from '../fetches/get'
 import { userFilter, userModel } from '../models/models'
 import { PostCollection } from '../fetches/post'

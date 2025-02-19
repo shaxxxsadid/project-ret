@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import volumeReducer from './features/AudioContext';
+import authReducer from './features/authSlice';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 
 export const store = configureStore({
         reducer: { 
-            volume: volumeReducer, 
+            volume: volumeReducer,
+            auth: authReducer,
         }
     })
 

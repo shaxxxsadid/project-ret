@@ -51,7 +51,7 @@ export default function Header({ title, imgClass }: HeaderProps) {
                         classNameVolume="absolute -bottom-20 mr-2 transform rotate-90 invisible w-0 opacity-0 group-hover:visible group-hover:w-32 group-hover:opacity-100 transition-deafultTransition delay-150"
                     />
                 </section>
-                <Link href={"/musicLib"} className="w-15 h-15">
+                <Link href={"/pages/musicLib"} className="w-15 h-15">
                     <Image
                         className='w-10 h-10 rounded-full bg-backgroundHeaderSearch p-2.5 cursor-pointer hover:shadow-[0_0_8px_5px_#F24F1C] transition-deafultTransition'
                         src={musicLib}

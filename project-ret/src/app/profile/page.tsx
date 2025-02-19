@@ -1,8 +1,8 @@
 'use client';
-import React from 'react';
 import Head from 'next/head';
 import { HandySvg } from "handy-svg";
-
+import { redirect } from "next/navigation";
+import { useSession,  } from 'next-auth/react';
 //  заменить на API-запрос
 const user = {
   id: '1',
@@ -13,7 +13,15 @@ const user = {
   location: 'New York, USA',
 };
 
+
 export default function ProfilePage() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect('/api/auth/signin?callbackUrl=/profile')
+    }
+  })
+  console.log()
   return (
     <div className="w-full h-[90vh] flex flex-col items-center justify-center">
       <div className=' flex flex-col items-center justify-center w-fit h-fit bg-neutral-800 p-10 rounded-2xl'>
@@ -33,7 +41,7 @@ export default function ProfilePage() {
 
         {/* Имя и имя пользователя */}
         <div className="text-center mb-4">
-          <h1 className="text-3xl font-bold">{user.name}</h1>
+          <h1 className="text-3xl font-bold">{session?.user?.name}</h1>
           <p className="text-gray-400">@{user.username}</p>
         </div>
 

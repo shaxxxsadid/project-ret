@@ -4,7 +4,9 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import placeholder from '@/../public/placeholderslider.png';
-import Loader from '../../components/UI/UX/Loader';
+import Loader from '@/app/components/UI/UX/Loader';
+
+
 
 // Пример данных плейлистов (заменить на API-запрос)
 const playlists = [
@@ -44,10 +46,10 @@ export default function LibraryPage() {
             </Head>
             <h1 className="text-4xl font-bold mb-8">Playlists</h1>
             {loading && (
-                <Loader loader={{ colorLoader: '#F24F1C', typeLoader: 'Bouncing', strokeWidth: '10' }} width='w-1/2' height='min-h-[50vh]'/>
+                <Loader loader={{ colorLoader: '#F24F1C', typeLoader: 'Bouncing', strokeWidth: '10' }} width='w-1/2' height='min-h-[50vh]' />
             )}
             {!loading && <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-4xl min-h-[50vh]">
-                { currentPlaylists.map((playlist) => (
+                {currentPlaylists.map((playlist) => (
                     <Link href={`/playlist/${playlist.id}`} key={playlist.id} className="text-center flex flex-col items-center justify-center">
                         <div className="relative w-48 h-48 mb-2">
                             <Image

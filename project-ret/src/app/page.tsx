@@ -6,8 +6,10 @@ import Title from "./components/UI/UX/title";
 import { config } from 'dotenv';
 
 config();
-console.log(process.env.DB_URI);
+
+
 export default function Home() {
+
   return (
     <div className="w-full ">
       <Title title="Music App" />
