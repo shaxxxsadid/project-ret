@@ -1,4 +1,4 @@
-import { ClientSession, MongoClient, ServerApiVersion } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 import { config } from 'dotenv';
 
 config();
@@ -12,54 +12,26 @@ const options = {
   },
   connectTimeoutMS: 30000,
   socketTimeoutMS: 30000,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
 };
-
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
-let isConnectedFlag = false;
-
-export async function connectToCluster() {
-  if (isConnectedFlag) {
-    console.log('Client already connected');
-    return client;
-  }
-
-  if (!clientPromise) {
-    client = new MongoClient(uri, options);
-    clientPromise = client.connect();
-  }
-
+const client = new MongoClient(uri, options);
+const db = client.db(process.env.DB_NAME);
+export async function connectToDB() {
   try {
-    await clientPromise;
-    console.log('Successfully connected to MongoDB Atlas!');
-    isConnectedFlag = true;
-    return client;
-  } catch (e) {
-    console.error('Failed to connect to MongoDB Atlas:', e);
-    isConnectedFlag = false;
-    return client;
+    await client.connect();
+    return db;
+  } catch (error) {
+    await client.close();
+    throw new Error(`${error} - Failed to connect to MongoDB`);
   }
 }
 
 export async function disconnectFromCluster() {
-  try {
+  if (client) {
     await client.close();
     console.log('Successfully disconnected from MongoDB Atlas!');
-    isConnectedFlag = false;
   }
-  catch (e) {
-    console.error(e);
-  }
-}
-
-export async function startSession(): Promise<ClientSession> {
-  if (!isConnected()) {
-    throw new Error('Client is not connected');
-  }
-  return client.startSession();
-}
-
-export function isConnected(): boolean {
-  return isConnectedFlag;
-
 }

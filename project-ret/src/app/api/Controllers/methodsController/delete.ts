@@ -1,6 +1,6 @@
-import { ClientSession, MongoClient } from "mongodb";
-import { connectToCluster, disconnectFromCluster, startSession } from "../../mongodb";
-import ApiError from "../../errors/errorApi";
+import { ClientSession, Db } from "mongodb";
+import { connectToDB, disconnectFromCluster } from "@/app/lib/mongodb";
+import ApiError from "@/app/api/errors/errorApi";
 
 interface DeleteStructure {
     delete: (collectionName: string, paramId: object) => Promise<Response>;
@@ -8,20 +8,12 @@ interface DeleteStructure {
 
 export class deleteItem implements DeleteStructure {
 
-    private clientPromise: Promise<MongoClient>;
+    private clientPromise: Promise<Db>;
     private session: ClientSession | null = null;
     private dbName: string = process.env.DB_NAME as string;
 
     constructor() {
-        this.clientPromise = connectToCluster();
-    }
-
-
-    private async ensureSession() {
-        if (!this.session) {
-            this.session = await startSession();
-        }
-        return this.session;
+        this.clientPromise = connectToDB();
     }
 
     public async disconnect() {
@@ -40,7 +32,7 @@ export class deleteItem implements DeleteStructure {
     public async delete(collectionName: string, paramId: object): Promise<Response> {
         try {
             const client = await this.clientPromise;
-            const collection = client?.db(this.dbName).collection(collectionName);
+            const collection = client?.collection(collectionName);
             const response = await collection?.findOneAndDelete({paramId});
             return Response.json({ deletedData: response });
         } catch (e) {

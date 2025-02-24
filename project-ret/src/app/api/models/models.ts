@@ -6,9 +6,9 @@ export type roleAccess = {
 }
 
 type avatar = {
-    filename: string,
-    type: string,
-    data: Binary
+    filename?: string,
+    type?: string,
+    data?: Binary
 }
 
 export type userModel = {
@@ -16,7 +16,7 @@ export type userModel = {
     email: string,
     password: string,
     roleAccess: roleAccess,
-    avatar: avatar
+    avatar: avatar | null
 };
 
 

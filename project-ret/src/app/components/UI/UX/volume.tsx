@@ -13,33 +13,33 @@ export default function Volume({ classNameVolume, isMuted }: VolumeProps) {
     const dispatch = useDispatch<AppDispatch>();
     const [volumeBar, setVolumeBar] = useState<number>(50);
     const [previousVolume, setPreviousVolume] = useState<number>(50);
+
     const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        if (isMuted) {
-            setVolumeBar(0);
-            dispatch(setVolume(0));
-        } else {
-            setVolumeBar(Number(event.target.value));
-            dispatch(setVolume(Number(event.target.value)));
+        const newVolume = Number(event.target.value);
+        if (!isMuted) {
+            setVolumeBar(newVolume);
+            setPreviousVolume(newVolume);
+            dispatch(setVolume(newVolume));
         }
     };
+
     useEffect(() => {
-            if (isMuted) {
-                setPreviousVolume(volumeBar);
-                setVolumeBar(0);
-                dispatch(setVolume(0));
-            } else {
-                setVolumeBar(previousVolume);
-                dispatch(setVolume(previousVolume));
-            }
-    }, [isMuted , volumeBar, previousVolume, dispatch]);
+        if (isMuted) {
+            dispatch(setVolume(0));
+        } else {
+            dispatch(setVolume(previousVolume));
+            setVolumeBar(previousVolume);
+        }
+    }, [isMuted, dispatch, previousVolume]);
+
     return (
         <input
             type="range"
             min="0"
             max="100"
-            value={volumeBar}
+            value={isMuted ? 0 : volumeBar}
             onChange={handleVolumeChange}
-            className={`${classNameVolume} cursor-pointer `}
+            className={`${classNameVolume} cursor-pointer`}
         />
     );
 }

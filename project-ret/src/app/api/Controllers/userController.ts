@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import ApiError from '@/app/api/errors/errorApi'
-import { GetCollection } from '../fetches/get'
-import { userFilter, userModel } from '../models/models'
-import { PostCollection } from '../fetches/post'
+import { GetCollection } from '@/app/api/Controllers/methodsController/get'
+import { userFilter, userModel } from '@/app/api/models/models'
+import { PostCollection } from '@/app/api/Controllers/methodsController/post'
 import { Binary } from 'mongodb'
-import { deleteItem } from '../fetches/delete'
-import { updateItem } from '../fetches/update'
+import { deleteItem } from '@/app/api/Controllers/methodsController/delete'
+import { updateItem } from '@/app/api/Controllers/methodsController/update'
 
 interface userControllerModel {
     getAllUsers: () => Promise<Response>
     getUserByFilter: (request: NextRequest) => Promise<Response>
     insertOneUser: (request: Request) => Promise<Response>
     insertManyUsers: (request: NextRequest) => Promise<Response>
+    update: (request: NextRequest) => Promise<Response>
+    delete: (request: NextRequest) => Promise<Response>
 }
 
 export class userController implements userControllerModel {
@@ -54,9 +56,6 @@ export class userController implements userControllerModel {
             }
             return NextResponse.error();
         }
-        finally {
-            await this.getCollection.disconnect();
-        }
     }
     public async getUserByFilter(request: NextRequest) {
         const searchParams = request.nextUrl.searchParams;
@@ -74,28 +73,34 @@ export class userController implements userControllerModel {
             }
             return NextResponse.error();
         }
-        finally {
-            await this.getCollection.disconnect();
-        }
     }
     public async insertOneUser(request: Request) {
-
+        const formData = await request.formData();
         try {
-            const body = await request.json();
-            const document: userModel = {
-                username: body.username as string,
-                password: body.password as string,
-                email: body.email as string,
-                roleAccess: {
-                    role: body.role as string,
-                    access: body.access as number
-                },
-                avatar: {
-                    filename: body.filename as string,
-                    type: body.type as string,
-                    data: body.data as Binary
-                }
+            const username = formData.get("username") as string;
+            const email = formData.get("email") as string;
+            const password = formData.get("password") as string;
+            const roleAccess = {
+                role: formData.get("roleAccess[role]") as string,
+                access: Number(formData.get("roleAccess[access]")),
+            };
+            const avatarFile = formData.get("avatar") as File | null;
+            let avatar = null;
+            if (avatarFile) {
+                const buffer = Buffer.from(await avatarFile.arrayBuffer());
+                avatar = {
+                    filename: avatarFile.name,
+                    type: avatarFile.type,
+                    data: new Binary(buffer), // Сохраняем файл как Binary
+                };
             }
+            const document: userModel = {
+                username,
+                password,
+                email,
+                roleAccess,
+                avatar,
+            };
             this.postCollection.insertOne('users', document)
             return NextResponse.json({ insertedData: 'Success data added' }, { status: 201 });
         }
@@ -104,9 +109,6 @@ export class userController implements userControllerModel {
                 console.error(ApiError.internalServerError(e.message));
             }
             return NextResponse.error();
-        }
-        finally {
-            await this.postCollection.disconnect();
         }
     }
     public async insertManyUsers(request: NextRequest) {
@@ -139,8 +141,6 @@ export class userController implements userControllerModel {
                 console.error(ApiError.internalServerError(e.message));
             }
             return NextResponse.error();
-        } finally {
-            await this.deleteCollectionItem.disconnect();
         }
     }
     public async update(request: NextRequest) {
@@ -155,8 +155,6 @@ export class userController implements userControllerModel {
                 console.error(ApiError.internalServerError(e.message));
             }
             return NextResponse.error();
-        } finally {
-            await this.updateCollectionItem.disconnect();
         }
     }
 }

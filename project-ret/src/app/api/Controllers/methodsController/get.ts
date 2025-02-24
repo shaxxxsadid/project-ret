@@ -1,7 +1,7 @@
-import { ClientSession, MongoClient } from "mongodb";
-import { connectToCluster, disconnectFromCluster, startSession } from "../../mongodb";
-import ApiError from "../../errors/errorApi";
-import { userFilter } from "../models/models";
+import { Db } from "mongodb";
+import { connectToDB, } from "@/app/lib/mongodb";
+import ApiError from "@/app/api/errors/errorApi";
+import { userFilter } from "@/app/api/models/models";
 
 interface GetCollectionStructure {
     getAllCollectionItems: (collectionName: string) => Promise<Response>;
@@ -12,39 +12,22 @@ interface GetCollectionStructure {
 
 export class GetCollection implements GetCollectionStructure {
 
-    private clientPromise: Promise<MongoClient>;
-    private session: ClientSession | null = null;
-    private dbName: string = process.env.DB_NAME as string;
-    
+    private static dbPromise: Promise<Db>;
     constructor() {
-        this.clientPromise =  connectToCluster();
+        if (!GetCollection.dbPromise) {
+            GetCollection.dbPromise = connectToDB();
+        }
     }
 
-    private async ensureSession() {
-        if (!this.session) {
-            this.session = await startSession();
-        }
-        return this.session;
-    }
-
-    public async disconnect() {
-        try {
-            if (this.session) {
-                this.session.endSession();
-            }
-            await disconnectFromCluster();
-        } catch (e) {
-            if (e instanceof Error) {
-                console.error(ApiError.internalServerError(e.message));
-            }
-        }
+    private async getDb(): Promise<Db> {
+        return GetCollection.dbPromise;
     }
 
     public async getAllCollectionItems(collectionName: string): Promise<Response> {
         try {
-            const client = await this.clientPromise;
-            const collection = client?.db(this.dbName).collection(collectionName);
-            const response = await collection?.find({}).toArray();
+            const db = await this.getDb();
+            const collection = db.collection(collectionName);
+            const response = await collection.find({}).toArray();
             return Response.json(response);
         }
         catch (e) {
@@ -57,9 +40,9 @@ export class GetCollection implements GetCollectionStructure {
     }
     public async getCollectionItemsByFilter(collectionName: string, param: userFilter): Promise<Response> {
         try {
-            const client = await this.clientPromise;
-            const collection = client?.db(this.dbName).collection(collectionName);
-            const response = await collection?.find(param).toArray();
+            const db = await this.getDb();
+            const collection = db.collection(collectionName);
+            const response = await collection.find(param).toArray();
             return Response.json(response);
         } catch (e) {
             if (e instanceof Error) {
@@ -70,9 +53,10 @@ export class GetCollection implements GetCollectionStructure {
         }
     }
     public async getCollection(collectionName: string): Promise<Response> {
+
         try {
-            const client = await this.clientPromise;
-            const collection = client?.db(this.dbName).collection(collectionName);
+            const db = await this.getDb();
+            const collection = db.collection(collectionName);
             return Response.json({ collection: collection });
         } catch (e) {
             if (e instanceof Error) {
@@ -83,10 +67,11 @@ export class GetCollection implements GetCollectionStructure {
         }
     }
     public async getCollectionCount(collectionName: string): Promise<Response> {
+
         try {
-            const client = await this.clientPromise;
-            const collection = client?.db(this.dbName).collection(collectionName);
-            const response = await collection?.countDocuments();
+            const db = await this.getDb();
+            const collection = db.collection(collectionName);
+            const response = await collection.countDocuments();
             return Response.json({ count: response });
         } catch (e) {
             if (e instanceof Error) {

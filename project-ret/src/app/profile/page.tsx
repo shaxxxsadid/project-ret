@@ -2,17 +2,16 @@
 import Head from 'next/head';
 import { HandySvg } from "handy-svg";
 import { redirect } from "next/navigation";
-import { useSession,  } from 'next-auth/react';
-//  заменить на API-запрос
-const user = {
-  id: '1',
-  name: 'John Doe',
-  username: 'johndoe',
-  bio: 'Software Developer and Music Enthusiast',
-  avatarUrl: `/_next/static/media/placeholder.svg`, // Путь к изображению в папке public
-  location: 'New York, USA',
-};
+import { useSession, signOut } from 'next-auth/react';
+import CustomButton from '../components/UI/UX/customButton';
+import Image from 'next/image';
+import AnimatedBackground from '../components/UI/UX/animatedBackground';
 
+interface User {
+  name: string;
+  email: string;
+  image?: string;
+}
 
 export default function ProfilePage() {
   const { data: session } = useSession({
@@ -21,10 +20,33 @@ export default function ProfilePage() {
       redirect('/api/auth/signin?callbackUrl=/profile')
     }
   })
-  console.log()
+  const user: User = {
+    name: session?.user?.name ?? "",
+    email: session?.user?.email ?? "",
+    image: session?.user?.image ?? "",
+  }
+
+  const userImage = user.image ? (
+    <Image
+      className="w-32 h-auto object-cover"
+      src={user.image}
+      width={200}
+      height={200}
+      alt={user.name ?? "Profile Pic"}
+      priority={true}
+    />
+  ) : (
+    <HandySvg
+      className="w-32 h-auto object-cover"
+      src={`placeholder.svg`}
+      alt={`NONE's avatar`}
+    />
+  )
+  console.log(session)
   return (
     <div className="w-full h-[90vh] flex flex-col items-center justify-center">
-      <div className=' flex flex-col items-center justify-center w-fit h-fit bg-neutral-800 p-10 rounded-2xl'>
+      <AnimatedBackground />
+      <div className=' flex flex-col items-center justify-center xl:w-[20vw] lg:w-[30vw] md:w-[40vw] sm:w-[40vw] h-fit bg-neutral-800 p-10 rounded-2xl'>
         <Head>
           <title>Profile - {user.name}</title>
           <meta name="description" content={`Profile of ${user.name}`} />
@@ -32,24 +54,24 @@ export default function ProfilePage() {
 
         {/* Аватар пользователя */}
         <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden">
-          <HandySvg
-            className="w-32 h-auto object-cover"
-            src={user.avatarUrl}
-            alt={`${user.name}'s avatar`}
-          />
+          {userImage}
+
         </div>
 
         {/* Имя и имя пользователя */}
         <div className="text-center mb-4">
-          <h1 className="text-3xl font-bold">{session?.user?.name}</h1>
-          <p className="text-gray-400">@{user.username}</p>
+          <h1 className="text-3xl font-bold">{user.name}</h1>
+          <p className="text-gray-400">{user.email}</p>
         </div>
 
         {/* Биографию и местоположение */}
-        <div className="text-center mb-4">
-          <p className="text-lg">{user.bio}</p>
-          <p className="text-gray-400">{user.location}</p>
-        </div>
+        <CustomButton
+          title='Sign out'
+          onClick={() => signOut()}
+          height='h-15'
+          width='auto'
+          className='bg-red-500 p-5 rounded-xl hover:bg-red-600 transition-defaultTransition'
+        />
       </div>
     </div>
   );

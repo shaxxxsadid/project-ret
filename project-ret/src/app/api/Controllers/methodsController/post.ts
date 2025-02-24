@@ -1,6 +1,6 @@
-import { ClientSession, MongoClient } from "mongodb";
-import { connectToCluster, disconnectFromCluster, startSession } from "../../mongodb";
-import ApiError from "../../errors/errorApi";
+import { ClientSession, Db } from "mongodb";
+import { connectToDB, disconnectFromCluster } from "@/app/lib/mongodb";
+import ApiError from "@/app/api/errors/errorApi";
 
 interface PostCollectionStructure {
     insertOne: (collectionName: string, document: object) => Promise<Response>;
@@ -9,19 +9,12 @@ interface PostCollectionStructure {
 
 export class PostCollection implements PostCollectionStructure {
 
-    private clientPromise: Promise<MongoClient>;
+    private clientPromise: Promise<Db>;
     private session: ClientSession | null = null;
     private dbName: string = process.env.DB_NAME as string;
 
     constructor() {
-        this.clientPromise = connectToCluster();
-    }
-
-    private async ensureSession() {
-        if (!this.session) {
-            this.session = await startSession();
-        }
-        return this.session;
+        this.clientPromise = connectToDB();
     }
 
     public async disconnect() {
@@ -40,7 +33,7 @@ export class PostCollection implements PostCollectionStructure {
     public async insertOne(collectionName: string, document: object): Promise<Response> {
         try {
             const client = await this.clientPromise;
-            const collection = client?.db(this.dbName).collection(collectionName);
+            const collection = client?.collection(collectionName);
             const response = await collection?.insertOne(document);
             console.log(`Inserted one document into the collection ${collectionName}`);
             return Response.json({ insertedData: response });
@@ -57,7 +50,7 @@ export class PostCollection implements PostCollectionStructure {
         try {
 
             const client = await this.clientPromise;
-            const collection = client?.db(this.dbName).collection(collectionName);
+            const collection = client?.collection(collectionName);
             const response = await collection?.insertMany(documents,);
             console.log(`Inserted many documents into the collection ${collectionName}`);
             return Response.json({ insertedData: response });

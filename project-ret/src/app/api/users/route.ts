@@ -1,6 +1,6 @@
 
 import { NextRequest } from "next/server";
-import ApiError from "../../errors/errorApi";
+import ApiError from "@/app/api/errors/errorApi";
 import { userController } from "../Controllers/userController";
 
 const user = new userController();

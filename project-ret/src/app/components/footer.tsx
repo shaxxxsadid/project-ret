@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { HandySvg } from "handy-svg";
-import { deafultURL } from "../index";
 
 export default function Footer() {
-    const socials: deafultURL[] = [`/_next/static/media/github.svg`, `/_next/static/media/telegram.svg`, `/_next/static/media/email.svg`];
-    const socialLinkClass: string = "h-full hover:text-gray-400 transition-deafultTransition mx-4";
+    const socials: string[] = [`/_next/static/media/github.svg`, `/_next/static/media/telegram.svg`, `/_next/static/media/email.svg`];
+    const socialLinkClass: string = "h-full hover:text-gray-400 transition-defaultTransition mx-4";
     return (
         <div>
             <section className="flex justify-center items-center w-full h-28 bg-backgroundHeaderSearch">

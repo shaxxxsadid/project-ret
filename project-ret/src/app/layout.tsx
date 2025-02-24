@@ -4,7 +4,7 @@ import "./globals.css";
 import { ReduxProvider } from "./lib/Providers/Provider";
 import Header from "./components/Header";
 import AuthProvider from "./lib/Providers/AuthProvider";
-
+//import "@/app/lib/lifecycle.ts";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,12 +27,14 @@ export default function RootLayout(
   return (
     <html lang="en">
       <body className={`${inter.className} ${interTight.className}`}>
-        <ReduxProvider>
-          <AuthProvider>
+
+        <AuthProvider>
+          <ReduxProvider>
             <Header title="Music App" imgClass="w-8 h-8" />
             {children}
-          </AuthProvider>
-        </ReduxProvider>
+          </ReduxProvider>
+        </AuthProvider>
+
       </body>
     </html>
   );

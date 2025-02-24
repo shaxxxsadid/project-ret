@@ -18,55 +18,63 @@ interface HeaderProps {
 
 export default function Header({ title, imgClass }: HeaderProps) {
     const [isVolumeMuted, setIsVolumeMuted] = useState<boolean>(false);
+
     const onVolumeHandlerClick = (): void => setIsVolumeMuted(!isVolumeMuted);
 
     return (
-        <div className="flex w-full h-16 px-10 pb-3 items-end justify-between sticky top-0 z-50  bg-background shadow-[0_0_8px_5px_#0a0a0a]">
-            <div className="flex items-end">
-                <Link href={"/"}>
+        <header className="flex w-full h-16 px-4 sm:px-6 lg:px-10 pb-3 items-end justify-between sticky top-0 z-50 bg-background shadow-[0_0_8px_5px_#0a0a0a]">
+            {/* Логотип и заголовок */}
+            <div className="flex items-end space-x-4 sm:space-x-8">
+                <Link href="/">
                     <Image
-                        className={`${imgClass} cursor-pointer`}
+                        className={`${imgClass} cursor-pointer w-10 h-10 sm:w-12 sm:h-12`}
                         src={logo}
                         alt="Logo"
+                        priority
                     />
                 </Link>
-
-                <h1 className="px-8 text-2xl">{title}</h1>
+                <h1 className="text-xl sm:text-2xl font-semibold">{title}</h1>
             </div>
-            <div className='flex w-1/2  h-16items-end justify-end'>
+
+            {/* Поиск */}
+            <div className="flex flex-1 max-w-[50%] sm:max-w-[40%] lg:max-w-[30%] h-full items-end justify-center">
                 <Search />
             </div>
-            <div className="grid grid-flow-col items-center h-full pr-10 relative">
-                <section
-                    className="container relative flex w-20 h-20 items-center justify-center group"
-                >
+
+            {/* Иконки управления */}
+            <div className="flex items-center space-x-4 sm:space-x-6 lg:space-x-8">
+                {/* Громкость */}
+                <section className="relative group">
                     <Image
-                        className='w-10 h-10 rounded-full bg-backgroundHeaderSearch p-2.5 mr-2 cursor-pointer group-hover:shadow-[0_0_8px_5px_#F24F1C] transition-deafultTransition'
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-backgroundHeaderSearch p-2 cursor-pointer transition-transform hover:scale-110 hover:shadow-[0_0_8px_5px_#F24F1C]"
                         src={isVolumeMuted ? volumeOff : volumeOn}
-                        alt="volume"
+                        alt="Volume"
                         onClick={onVolumeHandlerClick}
                     />
                     <Volume
                         isMuted={isVolumeMuted}
-                        classNameVolume="absolute -bottom-20 mr-2 transform rotate-90 invisible w-0 opacity-0 group-hover:visible group-hover:w-32 group-hover:opacity-100 transition-deafultTransition delay-150"
+                        classNameVolume="absolute -bottom-20 -right-11 transform rotate-90 opacity-0 invisible w-0 group-hover:opacity-100 group-hover:visible group-hover:w-32 transition-all duration-300"
                     />
                 </section>
-                <Link href={"/pages/musicLib"} className="w-15 h-15">
+
+                {/* Музыкальная библиотека */}
+                <Link href="/musicLib">
                     <Image
-                        className='w-10 h-10 rounded-full bg-backgroundHeaderSearch p-2.5 cursor-pointer hover:shadow-[0_0_8px_5px_#F24F1C] transition-deafultTransition'
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-backgroundHeaderSearch p-2 cursor-pointer transition-transform hover:scale-110 hover:shadow-[0_0_8px_5px_#F24F1C]"
                         src={musicLib}
-                        alt="music library"
-                    />
-                </Link>
-                <Link href={"/profile"} className="flex overflow-hidden items-center justify-center w-10 h-10 rounded-full  ml-8 cursor-pointer hover:shadow-[0_0_8px_5px_#F24F1C] transition-deafultTransition group bg-backgroundHeaderSearch">
-                    <Image
-                        className='w-5 h-5 object-cover'
-                        src={placeHolder}
-                        alt="profile"
+                        alt="Music Library"
                     />
                 </Link>
 
+                {/* Профиль */}
+                <Link href="/profile" className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-backgroundHeaderSearch cursor-pointer transition-transform hover:scale-110 hover:shadow-[0_0_8px_5px_#F24F1C]">
+                    <Image
+                        className="w-4 h-4 sm:w-5 sm:h-5 object-cover"
+                        src={placeHolder}
+                        alt="Profile"
+                    />
+                </Link>
             </div>
-        </div>
+        </header>
     );
 }

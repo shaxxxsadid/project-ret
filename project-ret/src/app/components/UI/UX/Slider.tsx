@@ -1,11 +1,11 @@
 'use client'
 
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { HandySvg } from "handy-svg";
 import { useEffect, useRef, useState } from "react";
 
 interface SliderProps {
-    images: StaticImageData[];
+    images: string[];
     width?: string;
     height?: string;
     title?: string;
@@ -53,7 +53,7 @@ export default function Slider({ images, width, height, title }: SliderProps) {
             <span
                 onClick={(): void => handleClick(true)}>
                 <HandySvg
-                    className="w-14 h-14 cursor-pointer hover:text-gray-400 transition-deafultTransition"
+                    className="w-14 h-14 cursor-pointer hover:text-gray-400 transition-defaultTransition"
                     src="/_next/static/media/leftArrow.svg"
                     width={28}
                     height={28}
@@ -68,21 +68,23 @@ export default function Slider({ images, width, height, title }: SliderProps) {
                 onMouseLeave={() => setIsHovered(false)}
             >
                 <article
-                    className={`${width} ${height} items-center w-full h-full flex my-10 space-x-8 transition-deafultTransition duration-500`}>
+                    className={`${width} ${height} items-center w-full h-full flex my-10 space-x-8 transition-defaultTransition duration-500`}>
                     {images.map((image, index) => (
-                            <Image
-                                className="w-50 h-50"
-                                src={image}
-                                alt={`Slider ${index + 1}`}
-                                key={index}
-                            />
+                        <Image
+                            className="w-full h-full"
+                            width={150}
+                            height={150}
+                            src={image}
+                            alt={`Slider ${index + 1}`}
+                            key={index}
+                        />
                     ))}
                 </article>
             </section>
             <span
                 onClick={(): void => handleClick(false)}>
                 <HandySvg
-                    className="w-14 h-14 cursor-pointer hover:text-gray-400 transition-deafultTransition"
+                    className="w-14 h-14 cursor-pointer hover:text-gray-400 transition-defaultTransition"
                     src="/_next/static/media/rightArrow.svg"
                     width={32}
                     height={32}

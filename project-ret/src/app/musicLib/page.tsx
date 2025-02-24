@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import placeholder from '@/../public/placeholderslider.png';
 import Loader from '@/app/components/UI/UX/Loader';
+import CreatePlaylistModal from '../components/UI/modal/PlaylistModal/playlistModal';
 
 
 
@@ -80,9 +81,8 @@ export default function LibraryPage() {
             </div>
 
             <div className="fixed bottom-4 right-4">
-                <Link href="/create-playlist" className="bg-orange-500 text-white px-6 py-2 rounded-full">
-                    Create a playlist
-                </Link>
+                <CreatePlaylistModal/>
+                
             </div>
         </div>
     );
